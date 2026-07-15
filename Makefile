@@ -1,5 +1,4 @@
 # Variables
-HOST_NAME ?= linux
 SHELL_FILE := /etc/shells
 
 # List of dotfiles to backup/restore
@@ -74,16 +73,13 @@ install:
 	@echo "✅ Tools installed successfully."
 
 settings:
-	$(call print_header,🚓 Setting up shell and hostname...)
+	$(call print_header,🚓 Setting up shell...)
 	@echo "🐟 Ensuring Fish is in /etc/shells..."
 	if ! grep -q "$(shell which fish)" $(SHELL_FILE); then \
 		echo "$(shell which fish)" | sudo tee -a $(SHELL_FILE); \
 	fi
 	@echo "⚙️ Setting Fish as default shell..."
 	chsh -s "$(shell which fish)"
-
-	@echo "⚙️ Setting host name to $(HOST_NAME)..."
-	sudo hostnamectl set-hostname $(HOST_NAME)
 	@echo "✅ System settings applied."
 
 # YubiKey GPG smartcard on a headless VM. Run after `restore` (needs the

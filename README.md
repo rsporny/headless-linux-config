@@ -14,10 +14,6 @@ accessed over SSH). Adapted from [macos-config](https://github.com/rsporny/macos
 ```
 make all                       # restore + install + settings + gpg
 ```
-or set the hostname:
-```
-make all HOST_NAME=my-new-vm
-```
 
 Targets can also be run individually: `make restore`, `make install`,
 `make settings`, `make gpg`. `make backup` copies your live dotfiles back into
