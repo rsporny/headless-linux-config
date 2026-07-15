@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Read stdin and push it to the *host* clipboard via the OSC 52 escape
+# sequence. Works over SSH through terminals that support it (Ghostty, etc.),
+# which is the only way to reach a clipboard from a headless machine with no
+# X/Wayland display.
+set -euo pipefail
+
+buf="$(cat)"
+enc="$(printf '%s' "$buf" | base64 | tr -d '\r\n')"
+seq="$(printf '\033]52;c;%s\a' "$enc")"
+
+# If inside tmux, wrap so the sequence passes through to the outer terminal.
+if [ -n "${TMUX:-}" ]; then
+  seq="$(printf '\033Ptmux;\033%s\033\\' "$seq")"
+fi
+
+# Write to the controlling terminal so it reaches the terminal emulator even
+# when stdout is captured by the calling program (e.g. lazygit). Fall back to
+# stdout if there is no controlling tty (e.g. running non-interactively).
+if ! { printf '%s' "$seq" > /dev/tty; } 2>/dev/null; then
+  printf '%s' "$seq"
+fi

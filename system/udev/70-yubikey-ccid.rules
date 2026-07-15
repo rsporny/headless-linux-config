@@ -1,0 +1,2 @@
+# Give the logged-in user access to the YubiKey CCID smartcard interface.
+ACTION=="add|change", SUBSYSTEM=="usb", ATTRS{idVendor}=="1050", GROUP="plugdev", MODE="0660", TAG+="uaccess"

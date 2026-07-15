@@ -1,0 +1,11 @@
+os:
+  # Copy (e.g. `y` on a PR/commit) → push to the host clipboard via OSC 52.
+  # No X/Wayland here, so xclip/xsel/wl-copy can't work; OSC 52 rides the SSH
+  # connection to the terminal emulator on the host instead.
+  copyToClipboardCmd: 'printf "%s" {{text}} | "$HOME/.local/bin/osc52-copy"'
+  # Open link (`O` on a PR) → no browser on a headless machine, so copy the URL
+  # to the host clipboard instead; paste it into your browser on the host.
+  openLink: 'printf "%s" {{link}} | "$HOME/.local/bin/osc52-copy"'
+git:
+  # Use the configured GPG setup (pinentry-curses) for commit/tag signing.
+  overrideGpg: true
