@@ -17,3 +17,5 @@ if status is-interactive
         end
     end
 end
+
+set -x GPG_TTY (tty)
