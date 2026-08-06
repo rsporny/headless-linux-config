@@ -127,6 +127,35 @@ rust:
 	@echo "   (If secp256k1-sys hits a wasm32 memmove error, add the CFLAGS_wasm32"
 	@echo "   '-Wno-error=implicit-function-declaration' block to ~/.cargo/config.toml.)"
 
+# VPN / cluster-access tooling (kubectl, AWS CLI v2, StrongDM `sdm`). NOT part of
+# `all` — run explicitly (`make vpn`) when a VM needs to reach the dev EKS cluster.
+# kubectl + awscli come from Homebrew; sdm has no brew formula, so it uses
+# StrongDM's release endpoint (returns JSON with the arch-
+# specific download URL), then `sudo ./sdm install` completes a system install.
+# Docs: https://docs.strongdm.com/users/client/linux
+vpn:
+	$(call print_header,🔐 Installing VPN / cluster-access tools...)
+	@echo "📦 kubectl + AWS CLI v2 via Homebrew..."
+	brew install kubernetes-cli awscli
+	@echo "🔒 StrongDM CLI (sdm) via official release endpoint..."
+	@if command -v sdm >/dev/null 2>&1; then \
+		echo "sdm already installed ($$(command -v sdm)), skipping."; \
+	else \
+		command -v unzip >/dev/null 2>&1 || { sudo apt update && sudo apt install -y unzip; }; \
+		command -v jq >/dev/null 2>&1 || brew install jq; \
+		arch="$$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')"; \
+		echo "⬇️  Resolving sdm download for linux/$$arch ..."; \
+		url="$$(curl -fsSL "https://app.strongdm.com/release?software=sdm-cli&os=linux&arch=$$arch" | jq -r '.url')"; \
+		echo "    $$url"; \
+		curl -fSL -o /tmp/sdm.zip "$$url"; \
+		rm -rf /tmp/sdm-cli && unzip -o /tmp/sdm.zip -d /tmp/sdm-cli; \
+		( cd /tmp/sdm-cli && sudo ./sdm install ); \
+		rm -rf /tmp/sdm.zip /tmp/sdm-cli; \
+	fi
+	@echo "✅ VPN tools installed. Verify: kubectl version --client; aws --version; sdm version"
+	@echo "   Next: 'sdm login' (StrongDM), then fetch kubeconfig, e.g.:"
+	@echo "   aws eks update-kubeconfig --name stl-euw1-dev-1 --region eu-west-1"
+
 clean: backup
 	$(call print_header,🧹 Removing configuration files...)
 	@for file in $(DOTFILES); do \
@@ -141,4 +170,4 @@ clean: backup
 	done
 	@echo "✅ All configuration files removed."
 
-.PHONY: all backup restore install settings gpg rust clean
+.PHONY: all backup restore install settings gpg rust vpn clean
