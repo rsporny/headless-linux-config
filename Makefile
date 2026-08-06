@@ -10,7 +10,8 @@ DOTFILES = \
     .gnupg/scdaemon.conf \
     .config/direnv/direnv.toml \
     .config/nvim \
-    .local/bin/osc52-copy
+    .local/bin/osc52-copy \
+    .claude/CLAUDE.md
 
 BACKUP_DIR = dotfiles
 
