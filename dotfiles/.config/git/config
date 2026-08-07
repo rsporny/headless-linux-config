@@ -3,11 +3,13 @@
 
 [tag]
     gpgSign = true
-
 [user]
     email = "404@rspo.dev"
     name = "Radosław Sporny"
     signingKey = "15AC8EA84FC2A5AE768FFD753CEBBA453DE5BCFD"
 [core]
     editor = nvim
-	hooksPath = /home/rspo/.config/git/hooks
+    hooksPath = /home/rspo/.config/git/hooks
+[credential "https://github.com"]
+    useHttpPath = true
+    helper = /home/rspo/.local/bin/git-credential-org

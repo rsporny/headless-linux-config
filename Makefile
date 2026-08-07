@@ -5,12 +5,15 @@ SHELL_FILE := /etc/shells
 DOTFILES = \
     .config/git/config \
     .config/fish/config.fish \
+    .config/fish/functions \
+    .config/fish/completions \
     .config/lazygit/config.yml \
     .gnupg/gpg-agent.conf \
     .gnupg/scdaemon.conf \
     .config/direnv/direnv.toml \
     .config/nvim \
     .local/bin/osc52-copy \
+    .local/bin/git-credential-org \
     .claude/CLAUDE.md
 
 BACKUP_DIR = dotfiles
