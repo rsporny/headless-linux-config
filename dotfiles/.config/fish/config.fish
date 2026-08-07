@@ -18,4 +18,5 @@ if status is-interactive
     end
 end
 
+set -gx GIT_TERMINAL_PROMPT 0
 set -x GPG_TTY (tty)
