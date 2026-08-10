@@ -9,3 +9,5 @@ os:
 git:
   # Use the configured GPG setup (pinentry-curses) for commit/tag signing.
   overrideGpg: true
+  commit:
+    signOff: true
