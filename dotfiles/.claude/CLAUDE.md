@@ -30,6 +30,15 @@ must be fish-compatible.
   to a file and use `-F msg.txt`.
 - Env vars: `set -gx VAR value`, not `export VAR=value`.
 
+### `gh` is a fish function, not a binary
+
+`~/.config/fish/functions/gh.fish` wraps `gh` to inject the right PAT (picked from the repo's
+`origin` remote). Run it as **`fish -c 'gh …'`** — calling `gh` directly hits the unwrapped
+brew binary at `/home/linuxbrew/.linuxbrew/bin/gh`, which sees no token and reports
+"not logged into any GitHub hosts". That error means the wrapper was bypassed, not that I
+need to re-auth, so don't ask me to run `gh auth login` on the strength of it. Same applies
+to any other command that turns out to be a fish function (`functions <name>` shows it).
+
 ## Git
 
 - Commits are GPG-signed (`commit.gpgsign=true`, key `15AC8EA84FC2A5AE768FFD753CEBBA453DE5BCFD`)
